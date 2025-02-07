@@ -1,0 +1,69 @@
+.pricing-plans {
+    text-align: center;
+    padding: 20px 40px; 
+    max-width: 800px;
+    margin: 40px auto; 
+}
+
+.pricing-plans h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.plan {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    transition: box-shadow 0.3s ease;
+}
+
+.plan:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.plan h3 {
+    font-size: 1.5em;
+    color: #222;
+}
+
+.plan p {
+    font-size: 1em;
+    color: #555;
+    margin: 15px 0;
+}
+
+.plan button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.plan button:hover {
+    background-color: #1976d2;
+}
+
+.checkout-section {
+    margin-top: 20px; 
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fffbe7;
+    border: 1px solid #f0e6a6;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-section h3 {
+    font-size: 1.5em;
+    color: #444;
+}
+
+.checkout-section p {
+    color: #666;
+}

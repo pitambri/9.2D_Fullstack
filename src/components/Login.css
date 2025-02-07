@@ -1,0 +1,96 @@
+/* src/pages/LoginPage.css */
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.login-container h2 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.ui.form {
+    text-align: left;
+}
+
+.ui.form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.ui.form input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.ui.button.primary {
+    background-color: #458dda;  /* Same color for both buttons */
+    color: white;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.ui.button.primary:hover {
+    background-color: #357ae8;  /* Same hover color for both buttons */
+}
+
+.google-signin {
+    margin-top: 30px;
+}
+
+.google-signin .ui.button {
+    background-color: #458dda;  /* Same color as primary button */
+    color: white;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.google-signin .ui.button:hover {
+    background-color: #357ae8;  /* Same hover color as primary button */
+}
+
+p {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+p a {
+    color: #007BFF;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+p a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
