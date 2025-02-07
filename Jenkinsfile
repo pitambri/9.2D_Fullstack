@@ -4,6 +4,7 @@ pipeline {
     environment {
         NODEJS_HOME = tool 'NodeJS 18'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+        DOCKER_IMAGE = "pitambri/9.2D_Fullstack"
     }
 
     stages {
@@ -15,39 +16,62 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'  // Ensures a clean and fast install
+                sh 'npm install'  // Clean install dependencies
             }
         }
 
         stage('Build') {
             steps {
-                sh 'npm run build'
+                sh 'npm run build'  // Build application
+                sh 'docker build -t ${DOCKER_IMAGE}:latest .'  // Create Docker image
             }
         }
 
         stage('Test') {
             steps {
-                // Run Jest tests in CI mode to avoid interactive failures
-                sh 'npm test -- --ci --runInBand || true'
+                sh 'npm test -- --ci --runInBand || true'  // Run automated tests
             }
         }
 
-        stage('Deploy') {
+        stage('Code Quality Analysis') {
             steps {
-                sh 'nohup npm start > output.log 2>&1 &'
+                withSonarQubeEnv('SonarQube') {
+                    sh 'sonar-scanner -Dsonar.projectKey=9.2D_Fullstack -Dsonar.sources=src'
+                }
+            }
+        }
+
+        stage('Deploy to Test Environment') {
+            steps {
+                sh 'docker run -d --name test_app -p 8080:3000 ${DOCKER_IMAGE}:latest'  
+            }
+        }
+
+        stage('Release to Production') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    sh 'docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:prod'
+                    sh 'docker push ${DOCKER_IMAGE}:prod'
+                }
+            }
+        }
+
+        stage('Monitoring & Alerting') {
+            steps {
+                sh 'curl -X POST "https://api.newrelic.com/v2/alerts_events.json" -H "X-Api-Key:${NEW_RELIC_API_KEY}" -d @alert-config.json'
             }
         }
     }
 
     post {
         always {
-            sh 'cat output.log || true'  // Show logs in Jenkins output
+            sh 'cat output.log || true'  // Show logs in Jenkins
         }
         success {
-            echo "✅ Deployment successful!"
+            echo "✅ Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Build or Test failed! Check logs for details."
+            echo "❌ Pipeline failed! Check logs."
         }
     }
 }
