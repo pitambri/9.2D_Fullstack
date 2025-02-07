@@ -1,21 +1,20 @@
 pipeline {
     agent any
 
-    environment {
-        NODEJS_HOME = tool 'NodeJS 18'
-        PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+    tools {
+        nodejs 'NodeJS 18'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/pitambri/9.2D_Fullstack.git'
+                git branch: 'main', url: 'https://github.com/pitambri/9.2D_Fullstack.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm ci'
             }
         }
 
@@ -33,8 +32,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying to production..."'
-                sh 'npm start &'
+                sh 'nohup npm start > output.log 2>&1 &'
             }
         }
     }
