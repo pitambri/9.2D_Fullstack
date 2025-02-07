@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/pitambri/Task9.2D--fullstack.git'
+                git 'https://github.com/pitambri/9.2D_Fullstack.git'
             }
         }
 
