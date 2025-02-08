@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         NODEJS_HOME = tool 'NodeJS 18'
-        PATH = "${NODEJS_HOME}/bin:/usr/local/bin:${env.PATH}"  // Ensure macOS paths are included
+        PATH = "$NODEJS_HOME/bin:/usr/local/bin:$PATH"
         DOCKER_IMAGE = "pitambri/9.2D_Fullstack"
-        NEW_RELIC_API_KEY = credentials('new-relic-api-key')  // Use Jenkins credentials store
+        NEW_RELIC_API_KEY = credentials('new-relic-api-key')
+        SONARQUBE_TOKEN = credentials('sonarqube-token')  // Fetching from Jenkins credentials store
     }
 
     stages {
@@ -17,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'  // Faster and more reliable than 'npm install'
+                sh 'npm install'  // Use 'npm ci' for faster, more reliable installs
             }
         }
 
@@ -25,7 +26,7 @@ pipeline {
             steps {
                 sh '''
                     npm run build
-                    docker build -t ${DOCKER_IMAGE}:latest .
+                    docker build -t $DOCKER_IMAGE:latest .
                 '''
             }
         }
@@ -33,7 +34,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    npm test -- --ci --runInBand || echo "Tests failed, continuing..."
+                    npm test -- --ci --runInBand
                 '''
             }
         }
@@ -54,7 +55,7 @@ pipeline {
         stage('Deploy to Test Environment') {
             steps {
                 sh '''
-                    docker run -d --rm --name test_app -p 8080:3000 ${DOCKER_IMAGE}:latest
+                    docker run -d --rm --name test_app -p 8080:3000 $DOCKER_IMAGE:latest
                 '''
             }
         }
@@ -63,8 +64,8 @@ pipeline {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
                     sh '''
-                        docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:prod
-                        docker push ${DOCKER_IMAGE}:prod
+                        docker tag $DOCKER_IMAGE:latest $DOCKER_IMAGE:prod
+                        docker push $DOCKER_IMAGE:prod
                     '''
                 }
             }
@@ -76,7 +77,7 @@ pipeline {
                     if (NEW_RELIC_API_KEY?.trim()) {
                         sh '''
                             curl -X POST "https://api.newrelic.com/v2/alerts_events.json" \
-                                 -H "X-Api-Key:${NEW_RELIC_API_KEY}" \
+                                 -H "X-Api-Key:$NEW_RELIC_API_KEY" \
                                  -d @alert-config.json
                         '''
                     } else {
@@ -89,6 +90,9 @@ pipeline {
 
     post {
         always {
+            script {
+                sh 'docker stop test_app || true'  // Stop test container if running
+            }
             sh 'cat output.log || true'  // Show logs in Jenkins console
         }
         success {
