@@ -22,10 +22,11 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'npm run build'  // Build application
-                sh 'docker build -t ${DOCKER_IMAGE}:latest .'  // Create Docker image
+                sh 'npm run build'
+                sh '/opt/homebrew/bin/docker build -t ${DOCKER_IMAGE}:latest .'  // Use full path
             }
         }
+
 
         stage('Test') {
             steps {
@@ -41,9 +42,9 @@ pipeline {
             }
         }
 
-        stage('Deploy to Test Environment') {
+       stage('Deploy to Test Environment') {
             steps {
-                sh 'docker run -d --name test_app -p 8080:3000 ${DOCKER_IMAGE}:latest'  
+                sh '/opt/homebrew/bin/docker run -d --name test_app -p 8080:3000 ${DOCKER_IMAGE}:latest'  
             }
         }
 
