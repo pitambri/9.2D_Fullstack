@@ -74,4 +74,4 @@ pipeline {
             echo "❌ Pipeline failed! Check logs."
         }
     }
-} modify this accordingly
+} 
