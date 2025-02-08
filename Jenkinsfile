@@ -4,7 +4,7 @@ pipeline {
     environment {
         NODEJS_HOME = tool 'NodeJS 18'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
-        DOCKER_IMAGE = "pitambri/9.2d_fullstack"
+        DOCKER_IMAGE = "pitambri/9.2D_Fullstack"
     }
 
     stages {
